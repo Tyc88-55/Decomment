@@ -1,0 +1,48 @@
+Start State:
+  NORMAL (Accepting)
+  Set some variable for star state.
+
+States:
+  1. NORMAL (Accepting)
+     - On '/': Transition to READ_SLASH. Print nothing (defer print decision).
+     - On '"': Transition to STRING. Print '"'.
+     - On '\'': Transition to CHAR. Print '\''.
+     - On all other characters: Stay in NORMAL. Print character.
+
+  2. READ_SLASH (Accepting)
+     - On '*': Transition to IN_COMMENT. Print ' ' (single space replacement).
+     - On '/': Transition to READ_SLASH. Print '/'.
+     - On '"': Transition to STRING. Print '/"'.
+     - On '\'': Transition to CHAR. Print '/\''.
+     - On all other characters: Transition to NORMAL. Print '/' followed by character.
+
+  3. IN_COMMENT (Rejecting)
+     - On '*': Transition to COMMENT_ASTERISK. Print nothing.
+     - On '\n': Stay in IN_COMMENT. Increment current line number and print '\n'.
+     - On all other characters: Stay in IN_COMMENT. Print nothing.
+
+  4. COMMENT_ASTERISK (Rejecting)
+     - On '/': Transition to NORMAL. Print nothing.
+     - On '*': Stay in COMMENT_ASTERISK. Print nothing.
+     - On '\n': Transition to IN_COMMENT. Increment current line number and print '\n'.
+     - On all other characters: Transition to IN_COMMENT. Print nothing.
+
+  5. STRING (Accepting)
+     - On '\': Transition to STRING_ESCAPE. Print '\'.
+     - On '"': Transition to NORMAL. Print '"'.
+     - On '\n': Stay in STRING. Increment current line number and print '\n'.
+     - On all other characters: Stay in STRING. Print character.
+
+  6. STRING_ESCAPE (Accepting)
+     - On '\n': Transition to STRING. Increment current line number and print '\n'.
+     - On all other characters: Transition to STRING. Print character.
+
+  7. CHAR (Accepting)
+     - On '\': Transition to CHAR_ESCAPE. Print '\'.
+     - On '\'': Transition to NORMAL. Print '\''.
+     - On '\n': Stay in CHAR. Increment current line number and print '\n'.
+     - On all other characters: Stay in CHAR. Print character.
+
+  8. CHAR_ESCAPE (Accepting)
+     - On '\n': Transition to CHAR. Increment current line number and print '\n'.
+     - On all other characters: Transition to CHAR. Print character.
